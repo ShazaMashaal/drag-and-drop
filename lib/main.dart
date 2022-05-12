@@ -1,6 +1,11 @@
+import 'package:drag_and_drop/try.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.landscapeLeft]);
   runApp(const MyApp());
 }
 
@@ -14,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Drag and Drop'),
+      home: TryView(),
     );
   }
 }
@@ -30,23 +35,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _indexOfDroppedItem = 0;
-  bool _isDragging = false;
 
   void _acceptDraggedItem(int index) {
     setState(() {
       _indexOfDroppedItem = index;
-    });
-  }
-
-  void _setIsDragging() {
-    setState(() {
-      _isDragging = true;
-    });
-  }
-
-  void _resetIsDragging() {
-    setState(() {
-      _isDragging = false;
     });
   }
 
@@ -84,15 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(20))),
                       ),
-                      onDragStarted: () {
-                        _setIsDragging();
-                      },
-                      onDraggableCanceled: (_, __) {
-                        _resetIsDragging();
-                      },
-                      onDragCompleted: () {
-                        _resetIsDragging();
-                      },
                       feedback: Container(
                         width: 100,
                         height: 100,
@@ -113,9 +96,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           border: Border.all(
                             color: Colors.blue,
                           ),
-                          borderRadius: BorderRadius.all(_isDragging
-                              ? const Radius.circular(20)
-                              : const Radius.circular(10)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(20)),
                         ));
                       },
                       onAccept: (int data) {
